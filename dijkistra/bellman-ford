@@ -1,0 +1,107 @@
+import heapq
+class Queue:
+    def __init__(self, maxsize):
+        self.queue = list()
+        self.maxsize = maxsize
+
+    def push(self, data):
+        if self.size() < self.maxsize:
+            self.queue.append(data)
+        elif data == None:
+            self.pop()
+        else:
+            self.pop()
+            self.queue.append(data)
+
+    def reducemaxsize(self):
+        if self.maxsize==q.size():
+            self.pop()
+            self.maxsize -= 1
+        elif self.size()<self.maxsize:
+            self.maxsize-=1
+        return self.maxsize
+
+    def pop(self):
+        val=self.queue[0]
+        self.queue.remove(self.queue[0])
+        return val
+
+    def peek(self):
+        return self.queue[0]
+
+    def fullqueue(self):
+        return self.queue
+
+    def size(self):
+        return len(self.queue)
+INF=10**9
+class Node:
+    def __init__(self,v,wt):
+        self.v=v
+        self.wt=wt
+class graph:
+    def __init__(self,nv):
+        self.nv=nv
+        self.adjecency=list()
+        self.degree=[0]*nv
+        #self.adj=list()
+        for i in range(nv):
+            self.adjecency.append([])
+    def addEdge(self,src,dest,wt):
+        self.adjecency[src].append((wt,dest))
+        self.adjecency[dest].append((wt,src))
+        if src!=dest:
+            self.degree[src]+=1
+            self.degree[dest]+=1
+        else:
+            self.degree[src]+=1
+    def dijkistra(self,sr):
+        visited = [False] * self.nv
+        self.pl=[INF]*self.nv
+        self.pl[sr]=0
+        self.before=[None]*self.nv
+        pq = []
+        wt,ve=0,0
+        heapq.heappush(pq,(0,sr))
+        while(len(pq)!=0):
+            wt,ve=heapq.heappop(pq)
+            visited[ve]=True
+            for i in range(len(self.adjecency[ve])):
+                if visited[self.adjecency[ve][i][1]]==False:
+                    if self.adjecency[ve][i][0] + self.pl[ve] <= self.pl[
+                        self.adjecency[ve][i][1]]:
+                        self.before[self.adjecency[ve][i][1]] = ve
+                        self.pl[self.adjecency[ve][i][1]] = self.adjecency[ve][i][0] + self.pl[self.before[
+                            self.adjecency[ve][i][1]]]
+                        heapq.heappush(pq, (self.pl[self.adjecency[ve][i][1]],self.adjecency[ve][i][1]))
+        print(self.pl)
+    def bellman_ford(self,sr):
+        visited = [False] * self.nv
+        self.pl = [INF] * self.nv
+        self.pl[sr] = 0
+        self.before = [None] * self.nv
+        self.negative = [0] * self.nv
+        q=Queue(self.nv)
+        q.push(sr)
+        self.negative[sr]=1
+        #print(q.size())
+        ve=0
+        while q.size()!=0:
+
+            ve=q.pop()
+
+            visited[ve] = False
+            for i in range(len(self.adjecency[ve])):
+                if visited[self.adjecency[ve][i][1]] == False:
+                    if self.adjecency[ve][i][0] + self.pl[ve] <= self.pl[
+                        self.adjecency[ve][i][1]]:
+                        self.before[self.adjecency[ve][i][1]] = ve
+                        self.pl[self.adjecency[ve][i][1]] = self.adjecency[ve][i][0] + self.pl[self.before[
+                            self.adjecency[ve][i][1]]]
+                        q.push( self.adjecency[ve][i][1])
+                        self.negative[self.adjecency[ve][i][1]]+=1
+                        if self.negative[self.adjecency[ve][i][1]]>self.nv:
+                            print("negative cycle")
+                            return
+                        visited[self.adjecency[ve][i][1]]=True
+        print(self.pl,self.negative)
