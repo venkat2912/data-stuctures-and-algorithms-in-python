@@ -1,0 +1,53 @@
+class disjoint:
+    def __init__(self,maxi):
+        self.parent=[None]*(maxi)
+        self.size=[0]*(maxi)
+    def make_set(self,v):
+        self.parent[v] = v
+
+    def find_set(self,v):
+        if v == self.parent[v]:
+            return v
+        self.parent[v] = self.find_set(self.parent[v])
+        return self.parent[v]
+    def union_set(self,a,b):
+        a = self.find_set(a)
+        b = self.find_set(b)
+        if a != b:
+            #self.parent[b] = a
+            if self.size[a] < self.size[b]:
+                a, b = b, a
+            self.parent[b] = a
+            self.size[a] += self.size[b]
+class Node:
+    def __init__(self,src,dest,wt):
+        self.src=src
+        self.dest=dest
+        self.wt=wt
+t=int(input())
+for q in range(t):
+    edges=int(input())
+    vertex = int(input())
+    graph=[]
+    for i in range(edges):
+        src,dest,wt= map(int,input().split())
+        graph.append(Node(src,dest,wt))
+    graph.sort(key=lambda x:x.wt)
+    for i in range(edges):
+        print(graph[i].src,graph[i].dest,graph[i].wt)
+    dis=disjoint(vertex)
+    for i in range(vertex):
+        dis.make_set(i)
+    print(dis.parent)
+
+    dis.union_set(graph[0].src,graph[0].dest)
+    mst=graph[0].wt
+    for i in range(1,len(graph)):
+        if dis.find_set(graph[i].src)==graph[0].src and dis.find_set(graph[i].dest)==graph[0].src:
+            continue
+        else:
+            mst+=graph[i].wt
+            dis.union_set(graph[0].src,graph[i].src)
+            dis.union_set(graph[0].src, graph[i].dest)
+    print(mst)
+
