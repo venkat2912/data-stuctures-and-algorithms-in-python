@@ -1,0 +1,106 @@
+MAX=10**9
+MIN=-10**9
+
+def build(arr,tree,ss,se,si):
+    if ss==se:
+        tree[si]=arr[ss]
+        return arr[ss]
+    mid=(ss+se)//2
+    #tree[si]=build(arr,tree,ss,mid,si*2+1)+build(arr,tree,mid+1,se,si*2+2)
+    #tree[si] = build(arr, tree, ss, mid, si * 2 + 1)^build(arr, tree, mid + 1, se, si * 2 + 2)#xor
+    #tree[si] = min(build(arr, tree, ss, mid, si * 2 + 1) , build(arr, tree, mid + 1, se, si * 2 + 2))#min
+    tree[si] = max(build(arr, tree, ss, mid, si * 2 + 1), build(arr, tree, mid + 1, se, si * 2 + 2))#max
+
+    return tree[si]
+def getsum(tree,ss,se,l,r,si):
+    if l<=ss and r>=se:
+        return tree[si]
+    elif l>se or r<ss:
+        return 0
+    else:
+        mid = (ss + se) // 2
+        return getsum(tree,ss,mid,l,r,si*2+1)+getsum(tree,mid+1,se,l,r,si*2+2)
+def getmin(tree,ss,se,l,r,si):
+    if l<=ss and r>=se:
+        return tree[si]
+    elif l>se or r<ss:
+        return MAX
+    else:
+        mid = (ss + se) // 2
+        return min(getmin(tree,ss,mid,l,r,si*2+1),getmin(tree,mid+1,se,l,r,si*2+2))
+def getmax(tree,ss,se,l,r,si):
+    if l<=ss and r>=se:
+        return tree[si]
+    elif l>se or r<ss:
+        return MIN
+    else:
+        mid = (ss + se) // 2
+        return max(getmax(tree,ss,mid,l,r,si*2+1),getmax(tree,mid+1,se,l,r,si*2+2))
+def getxor(tree,ss,se,l,r,si):
+    if l<=ss and r>=se:
+        return tree[si]
+    elif l>se or r<ss:
+        return 0
+    else:
+        mid = (ss + se) // 2
+        return getxor(tree,ss,mid,l,r,si*2+1)^getxor(tree,mid+1,se,l,r,si*2+2)
+def updatesum(tree,i,diff,ss,se,si):
+    if(ss==se and ss == i):
+        tree[si]=tree[si]+diff
+        return
+    mid=(ss+se)//2
+    if i<=mid:
+        updatesum(tree,i,diff,ss,mid,2*si+1)
+    elif i>mid:
+        updatesum(tree,i,diff,mid+1,se,2*si+2)
+    tree[si]=tree[2*si+1]+tree[2*si+2]
+def updatexor(tree,i,diff,ss,se,si):
+    if(ss==se and ss == i):
+        tree[si]=tree[si]+diff
+        return
+    mid=(ss+se)//2
+    if i<=mid:
+        updatexor(tree,i,diff,ss,mid,2*si+1)
+    elif i>mid:
+        updatexor(tree,i,diff,mid+1,se,2*si+2)
+    tree[si]=tree[2*si+1]^tree[2*si+2]
+def updatemin(tree,i,diff,ss,se,si):
+    if(ss==se and ss == i):
+        tree[si]=tree[si]+diff
+        return
+    mid=(ss+se)//2
+    if i<=mid:
+        updatemin(tree,i,diff,ss,mid,2*si+1)
+    elif i>mid:
+        updatemin(tree,i,diff,mid+1,se,2*si+2)
+    tree[si]=min(tree[2*si+1],tree[2*si+2])
+def updatemax(tree,i,diff,ss,se,si):
+    if(ss==se and ss == i):
+        tree[si]=tree[si]+diff
+        return
+    mid=(ss+se)//2
+    if i<=mid:
+        updatemax(tree,i,diff,ss,mid,2*si+1)
+    elif i>mid:
+        updatemax(tree,i,diff,mid+1,se,2*si+2)
+    tree[si]=max(tree[2*si+1],tree[2*si+2])
+
+def updatear(arr,tree,i,val):
+    diff = val - arr[i]
+    arr[i] = val
+
+    # updatesum(tree,i,diff,0,6,0)
+    # updatexor(tree,i,diff,0,6,0)
+    updatemax(tree, i, diff, 0, 6, 0)
+    # updatemin(tree, i, diff, 0, 6, 0)
+arr=[1,2,3,4,5,6,7]
+l=2*len(arr)
+tree=[None]*(l-1)
+build(arr,tree,0,len(arr)-1,0)
+print(tree)
+print(getmax(tree,0,6,0,6,0))
+updatear(arr,tree,2,9)
+print(tree)
+print(getmax(tree,0,6,0,6,0))
+
+
