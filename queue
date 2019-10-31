@@ -1,0 +1,33 @@
+class Queue:
+    def __init__(self, maxsize):
+        self.queue = list()
+        self.maxsize = maxsize
+
+    def push(self, data):
+        if self.size() < self.maxsize:
+            self.queue.append(data)
+        elif data == None:
+            self.pop()
+        else:
+            self.pop()
+            self.queue.append(data)
+
+    def reducemaxsize(self):
+        if self.maxsize==q.size():
+            self.pop()
+            self.maxsize -= 1
+        elif self.size()<self.maxsize:
+            self.maxsize-=1
+        return self.maxsize
+
+    def pop(self):
+        self.queue.remove(self.queue[0])
+
+    def peek(self):
+        return self.queue[0]
+
+    def fullqueue(self):
+        return self.queue
+
+    def size(self):
+        return len(self.queue)
