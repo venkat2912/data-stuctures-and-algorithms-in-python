@@ -1,0 +1,41 @@
+class TrieNode:
+    def __init__(self):
+        self.children = [None] * 26
+        self.isEndOfWord = False
+        self.word=0
+        self.prefix=0
+class Trie:
+    def __init__(self):
+        self.root = self.getNode()
+    def getNode(self):
+        return TrieNode()
+    def _charToIndex(self, ch):
+        return ord(ch) - ord('A')
+    def insert(self, word):
+        root = self.root
+        for ch in range(len(word)):
+            index = self._charToIndex(word[ch])
+            if not root.children[index]:
+                root.children[index] = self.getNode()
+            root = root.children[index]
+            root.prefix+=1
+        root.word+=1
+        root.isEndOfWord = True
+    def search(self,prefix):
+        root = self.root
+        for ch in range(len(prefix)):
+            index = self._charToIndex(prefix[ch])
+            if  root.children[index]==None:
+                print("key not present")
+                return 0
+            root = root.children[index]
+        return root
+    def delete(self,word):
+        root = self.root
+        for ch in range(len(word)):
+            index = self._charToIndex(word[ch])
+            root = root.children[index]
+            root.prefix-=1
+        root.word-=1
+    def traverse(self):
+        root=self.root
