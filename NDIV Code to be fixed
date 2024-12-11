@@ -1,0 +1,79 @@
+import math
+def fillPrimes(chprime, high):
+
+    ck = [True ] *(high +1)
+
+    l = int(math.sqrt(high))+1
+    for i in range(2, l+ 1):
+        if ck[i]:
+            for j in range(i * i, l + 1, i):
+                ck[j] = False
+
+    for k in range(2, l + 1):
+        if ck[k]:
+            chprime.append(k)
+    #print(chprime)
+    return chprime
+
+
+
+def cntDivisors(chprime,a,b):
+
+    st=int(math.sqrt(a))
+    en = int(math.sqrt(b)) + 1
+    divisor=[1]*(b-a+2)
+    dividend=[]
+    for j in range(a, b + 1):
+        dividend.append(j)
+    #print(dividend)
+    for i in range(len(chprime)):
+
+        for j in range(len(dividend)):
+
+            cnt=0
+            while dividend[j]%chprime[i]==0:
+                #print('h')
+                cnt+=1
+                dividend[j]//=chprime[i]
+                #print(j,chprime[i])
+            #print(j,chprime[i],cnt)
+            divisor[j+1]*=(1+cnt)
+    #print(dividend,'hi')
+    for i in range(len(dividend)):
+        if dividend[i]!=(i+1) and dividend[i]!=1:
+            #print(dividend[i],i+1)
+            divisor[i+1]*=2
+
+    for i in range(2,len(divisor)):
+        if divisor[i]==1:
+            divisor[i]=2
+
+    #print(divisor)
+    return (divisor)
+#999990000 1000000000 2
+
+a, b, n = map(int, input().split())# 1,7,2
+chprime = list()
+chprime=fillPrimes(chprime, b)
+
+
+divc=cntDivisors(chprime,a,b)
+ans=0
+for i in range(len(divc)):
+    if divc[i]==n:
+        #print(i)
+        ans+=1
+print(ans)
+
+
+'''''''''
+temp=-1
+for i in range(a,b+1):
+    temp=cntDivisors(i,chprime,a,b)
+    if temp==n:
+        ans+=1
+print(ans)
+'''''''''
+
+
+
