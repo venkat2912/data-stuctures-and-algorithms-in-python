@@ -1,3 +1,5 @@
+#https://codeforces.com/blog/entry/62393
+#https://codeforces.com/blog/entry/101817
 #this code is better than dictionary of a element size hash map at places where you need to process a freq array, esp if 1<a[i]<10^9 because dic fails on codeforces and a hash of n size is not feasible.
 def freqtab(arr):
     #arr = list(map(int, input().split()))
